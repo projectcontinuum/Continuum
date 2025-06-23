@@ -41,7 +41,7 @@
     "@knime/styles": "1.2.0",
     "@fontsource/roboto": "4.5.8",
     "@fontsource/roboto-mono": "4.5.10",
-    "knime-core-ui": "file:/Users/L001418/Projects/KNIME/knime-core-ui/org.knime.core.ui/js-src",
+    "knime-core-ui": "file:/Users/L001418/Projects/ContinuumWorkflow/continuum-frontend/submodules/knime-core-ui/org.knime.core.ui/js-src",
     "consola": "^3.4.0"
   },
   "devDependencies": {
@@ -49,7 +49,8 @@
     "@types/react-dom": "^18",
     "copyfiles": "latest",
     "rimraf": "latest",
-    "typescript": "^5"
+    "typescript": "^5",
+    "license-check": "1.1.5"
   },
   "peerDependencies": {
     "vue": "3.5.13"
@@ -59,6 +60,19 @@
     "build": "tsc && yarn run copy-files",
     "watch": "tsc -w",
     "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.css lib/"
+  },
+  "license-check-config": {
+    "src": [
+      "test/**/*",
+      "src/**/*.js",
+      "/usr/lib",
+      "index.js",
+      "!./node_modules/**/*"
+    ],
+    "path": "assets/header.txt",
+    "blocking": false,
+    "logInfo": false,
+    "logError": true
   },
   "theiaExtensions": [
     {
