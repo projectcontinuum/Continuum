@@ -1,9 +1,10 @@
-{{- if .Values.app_settings.kafka.enabled }}
+{{- if eq .Values.app_settings.kafka.enabled true }}
 
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: kafka
+  namespace: {{ .Values.namespace }}
 spec:
   serviceName: kafka
   replicas: 3
@@ -17,36 +18,61 @@ spec:
     spec:
       containers:
         - name: kafka
-          image: confluentinc/cp-kafka:7.5.0
+          image: confluentinc/cp-kafka:latest
           ports:
+            - containerPort: 9091
+              protocol: TCP
             - containerPort: 9092
+              protocol: TCP
             - containerPort: 9093
+              protocol: TCP
+          command:
+            - /bin/bash
+            - -c
+            - |
+              export KAFKA_NODE_ID=${HOSTNAME##*-}
+              export KAFKA_ADVERTISED_LISTENERS="BROKER://${HOSTNAME}.kafka:9092,EXTERNAL://$(POD_IP):9092"
+              echo "KAFKA_NODE_ID=${KAFKA_NODE_ID}"
+              echo "KAFKA_ADVERTISED_LISTENERS=${KAFKA_ADVERTISED_LISTENERS}"
+              /etc/confluent/docker/run
           env:
-            - name: KAFKA_NODE_ID
+            - name: KAFKA_LISTENERS
+              value: "BROKER://:9091,EXTERNAL://:9092,CONTROLLER://:9093"
+            - name: KAFKA_INTER_BROKER_LISTENER_NAME
+              value: "BROKER"
+            - name: KAFKA_CONTROLLER_LISTENER_NAMES
+              value: "CONTROLLER"
+            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "CONTROLLER:PLAINTEXT,BROKER:PLAINTEXT,EXTERNAL:PLAINTEXT"
+            - name: KAFKA_PROCESS_ROLES
+              value: "controller,broker"
+            - name: KAFKA_CONTROLLER_QUORUM_VOTERS
+              value: "0@kafka-0.kafka:9093,1@kafka-1.kafka:9093,2@kafka-2.kafka:9093"
+            - name: TOPIC_AUTO_CREATE
+              value: "true"
+            - name: CLUSTER_ID
+              value: "ILFgVkHSQceRTtSEDPN7cQ"
+            - name: KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL
+              value: "http://schema-registry:8080"
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: STATEFULSET_NODE_ID
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: KAFKA_PROCESS_ROLES
-              value: "broker,controller"
-            - name: KAFKA_CONTROLLER_QUORUM_VOTERS
-              value: "0@kafka-0.kafka:9093,1@kafka-1.kafka:9093,2@kafka-2.kafka:9093"
-            - name: KAFKA_LISTENERS
-              value: "PLAINTEXT://:9092,CONTROLLER://:9093"
-            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
-              value: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT"
-            - name: KAFKA_CONTROLLER_LISTENER_NAMES
-              value: "CONTROLLER"
-            - name: KAFKA_LOG_DIRS
-              value: "/var/lib/kafka/data"
-            - name: KAFKA_CLUSTER_ID
-              value: "my-kraft-cluster"
           volumeMounts:
             - name: kafka-data
               mountPath: /var/lib/kafka/data
-      volumes:
-        # EmptyDir for demo; use PersistentVolumeClaim for production
-        - name: kafka-data
-          emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: kafka-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 2Gi
 
 ---
 
@@ -54,32 +80,20 @@ apiVersion: v1
 kind: Service
 metadata:
   name: kafka
-  labels:
-    app: kafka
-spec:
-  ports:
-    - port: 9092
-      name: kafka
-    - port: 9093
-      name: controller
-  clusterIP: None
-  selector:
-    app: kafka
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: kafka-headless
+  namespace: {{ .Values.namespace }}
 spec:
   clusterIP: None
   selector:
     app: kafka
   ports:
-    - port: 9092
-      name: kafka
-    - port: 9093
-      name: controller
+    - name: broker
+      port: 9091
+      targetPort: 9091
+    - name: external
+      port: 9092
+      targetPort: 9092
+    - name: controller
+      port: 9093
+      targetPort: 9093
 
 {{- end }}

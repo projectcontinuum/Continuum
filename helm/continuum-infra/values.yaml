@@ -2,7 +2,17 @@ namespace: continuum-dev
 images:
   kafka:
     image: confluentinc/cp-kafka
-    tag: latest
+    tag: 7.2.2
+  schema_registry:
+    image: confluentinc/cp-schema-registry
+    tag: 7.2.2
+  kafka_ui:
+    image: kafbat/kafka-ui
+    tag: v1.3.0
 app_settings:
   kafka:
+    enabled: true
+  schema_registry:
+    enabled: true
+  kafka_ui:
     enabled: true
