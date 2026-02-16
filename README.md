@@ -16,6 +16,6 @@ A next-gen truely distributed cloud-native workflow engine for data science and 
    ```
 3. Add Search attributes to Temporal server
    ```bash
-   temporal operator search-attribute create --name "Continuum:ExecutionStatus" --type "Int"
-   temporal operator search-attribute create --name "Continuum:WorkflowFileName" --type "Keyword"
+   docker exec -it temporal-admin-tools temporal operator search-attribute create --name "Continuum:ExecutionStatus" --type "Int"
+   docker exec -it temporal-admin-tools temporal operator search-attribute create --name "Continuum:WorkflowFileName" --type "Keyword"
    ```

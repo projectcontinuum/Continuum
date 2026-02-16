@@ -1,8 +1,6 @@
 // @ts-check
-require('es6-promise/auto');
 require('reflect-metadata');
-require('setimmediate');
-const { Container } = require('inversify');
+const { Container } = require('@theia/core/shared/inversify');
 const { FrontendApplicationConfigProvider } = require('@theia/core/lib/browser/frontend-application-config-provider');
 
 FrontendApplicationConfigProvider.set({

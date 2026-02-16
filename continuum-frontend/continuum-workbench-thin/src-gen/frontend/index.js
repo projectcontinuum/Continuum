@@ -1,8 +1,6 @@
 // @ts-check
-
 require('reflect-metadata');
-require('setimmediate');
-const { Container } = require('inversify');
+const { Container } = require('@theia/core/shared/inversify');
 const { FrontendApplicationConfigProvider } = require('@theia/core/lib/browser/frontend-application-config-provider');
 
 FrontendApplicationConfigProvider.set({
@@ -87,7 +85,7 @@ module.exports = (async () => {
         await load(container, import('@theia/core/lib/browser/request/browser-request-module'));
         await load(container, import('@theia/filesystem/lib/browser/filesystem-frontend-module'));
         await load(container, import('@theia/filesystem/lib/browser-only/browser-only-filesystem-frontend-module'));
-        await load(container, import('@theia/filesystem/lib/browser/download/file-download-frontend-module'));
+        await load(container, import('@theia/filesystem/lib/browser-only/download/file-download-frontend-module'));
         await load(container, import('@theia/filesystem/lib/browser/file-dialog/file-dialog-module'));
         await load(container, import('@theia/variable-resolver/lib/browser/variable-resolver-frontend-module'));
         await load(container, import('@theia/workspace/lib/browser/workspace-frontend-module'));

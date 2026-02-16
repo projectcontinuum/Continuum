@@ -1,0 +1,23 @@
+@import url("@knime/styles/css");
+
+body {
+    margin: 10px;
+    font-size: 16px;
+    line-height: 1.15;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.frame {
+    position: relative;
+    border: 5px solid orange;
+    max-width: 400px;
+    min-width: 340px;
+    height: 600px;
+    overflow-y: auto;
+}

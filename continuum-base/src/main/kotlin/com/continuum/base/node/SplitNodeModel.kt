@@ -8,7 +8,6 @@ import com.continuum.core.commons.utils.NodeOutputWriter
 import com.continuum.knime.base.node.org.knime.base.node.preproc.filter.row.RowFilterNodeModel
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import io.temporal.failure.ApplicationFailure
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.io.File
@@ -47,28 +46,34 @@ class SplitNodeModel : ProcessNodeModel() {
     val propertiesSchema: Map<String, Any> = objectMapper.readValue(
         """
         {
-          "type": "object",
-          "properties": {
-            "columnName": {
-              "type": "string",
-              "title": "Column Name",
-              "description": "The name of the column to split"
-            },
-            "outputs": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "columnName": {
-                            "type": "string",
-                            "title": "Output Name"
-                        }
-                    },
-                    "required": ["columnName"]
+            "type": "object",
+            "properties": {
+                "columnName": {
+                    "type": "string",
+                    "title": "Column Name",
+                    "description": "The name of the column to split"
+                },
+                "outputs": {
+                    "title": "Outputs",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "columnName": {
+                                "type": "string",
+                                "title": "Output Name",
+                                "description": "The name of the column to split"
+                            }
+                        },
+                        "required": [
+                            "columnName"
+                        ]
+                    }
                 }
-            }
-          },
-          "required": ["columnName"]
+            },
+            "required": [
+                "columnName"
+            ]
         }
         """.trimIndent(),
         object: TypeReference<Map<String, Any>>() {}
@@ -77,29 +82,35 @@ class SplitNodeModel : ProcessNodeModel() {
     val propertiesUiSchema: Map<String, Any> = objectMapper.readValue(
         """
         {
-          "type": "VerticalLayout",
-          "elements": [
-            {
-              "type": "Control",
-              "scope": "#/properties/columnName"
-            },
-            {
-              "type": "Control",
-              "scope": "#/properties/outputs",
-              "options": {
-                "detail": {
-                  "type": "VerticalLayout",
-                  "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/columnName",
-                      "title": "Output Column Name"
-                    }
-                  ]
+            "elements": [
+                {
+                    "type": "Section",
+                    "label": "Column Splitter",
+                    "elements": [
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/columnName"
+                        },
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/outputs",
+                            "options": {
+                                "detail": {
+                                    "horizontalLayout": {
+                                        "type": "HorizontalLayout",
+                                        "elements": [
+                                            {
+                                                "type": "Control",
+                                                "scope": "#/properties/columnName"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    ]
                 }
-              }
-            }
-          ]
+            ]
         }
         """.trimIndent(),
         object: TypeReference<Map<String, Any>>() {}

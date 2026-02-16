@@ -74,28 +74,30 @@ class JointNodeModel: ProcessNodeModel() {
     val propertiesUiSchema: Map<String, Any> = objectMapper.readValue(
         """
         {
-          "type": "VerticalLayout",
-          "elements": [
-            {
-              "type": "Control",
-              "scope": "#/properties/inputs",
-              "options": {
-                "detail": {
-                  "type": "VerticalLayout",
-                  "elements": [
-                    {
-                      "type": "Control",
-                      "scope": "#/properties/columnName"
+            "type": "VerticalLayout",
+            "elements": [
+                {
+                    "type": "Control",
+                    "scope": "#/properties/inputs",
+                    "options": {
+                        "detail": {
+                            "horizontalLayout": {
+                                "type": "HorizontalLayout",
+                                "elements": [
+                                    {
+                                        "type": "Control",
+                                        "scope": "#/properties/columnName"
+                                    }
+                                ]
+                            }
+                        }
                     }
-                  ]
+                },
+                {
+                    "type": "Control",
+                    "scope": "#/properties/outputsColumnName"
                 }
-              }
-            },
-            {
-              "type": "Control",
-              "scope": "#/properties/outputsColumnName"
-            }
-          ]
+            ]
         }
         """.trimIndent(),
         object: TypeReference<Map<String, Any>>() {}

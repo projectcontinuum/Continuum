@@ -8,8 +8,8 @@ if ('ELECTRON_RUN_AS_NODE' in process.env) {
 
 const path = require('path');
 process.env.THEIA_APP_PROJECT_PATH = path.resolve(__dirname, '..', '..')
-const express = require('express');
-const { Container } = require('inversify');
+const express = require('@theia/core/shared/express');
+const { Container } = require('@theia/core/shared/inversify');
 const { BackendApplication, BackendApplicationServer, CliManager } = require('@theia/core/lib/node');
 const { backendApplicationModule } = require('@theia/core/lib/node/backend-application-module');
 const { messagingBackendModule } = require('@theia/core/lib/node/messaging/messaging-backend-module');
@@ -55,6 +55,10 @@ module.exports = async (port, host, argv) => {
         await load(require('@theia/filesystem/lib/node/filesystem-backend-module'));
         await load(require('@theia/filesystem/lib/node/download/file-download-backend-module'));
         await load(require('@theia/workspace/lib/node/workspace-backend-module'));
+        await load(require('@theia/markers/lib/node/problem-backend-module'));
+        await load(require('@theia/messages/lib/node/messages-backend-module'));
+        await load(require('@theia/editor/lib/node/editor-backend-module'));
+        await load(require('@theia/navigator/lib/node/navigator-backend-module'));
         await load(require('@theia/preferences/lib/node/preference-backend-module'));
         await load(require('@theia/process/lib/common/process-common-module'));
         await load(require('@theia/process/lib/node/process-backend-module'));

@@ -47,7 +47,7 @@ class RowFilterNodeModel(
         "Processing/KNIME"
     )
 
-    val rowFilterSchema: Map<String, Any> = objectMapper.readValue(
+    private val rowFilterSchema: Map<String, Any> = objectMapper.readValue(
         this::class.java.classLoader
             .getResourceAsStream(
                 resourceRootPath + File.separator + "properties.schema.json"
@@ -57,7 +57,7 @@ class RowFilterNodeModel(
             ?: throw IllegalStateException("Processing node settings template not found")
     )
 
-    val rowFilterUISchema: Map<String, Any> = objectMapper.readValue(
+    private val rowFilterUISchema: Map<String, Any> = objectMapper.readValue(
         this::class.java.classLoader
             .getResourceAsStream(
                 resourceRootPath + File.separator + "properties-ui.schema.json"

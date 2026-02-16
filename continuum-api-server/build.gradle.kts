@@ -3,6 +3,8 @@ plugins {
     kotlin("plugin.spring") version "1.9.25"
     id("org.springframework.boot") version "3.4.0"
     id("io.spring.dependency-management") version "1.1.6"
+    id("com.google.cloud.tools.jib") version "3.4.0"
+    `maven-publish`
 }
 
 group = "com.continuum.core"
@@ -70,4 +72,44 @@ kotlin {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+jib {
+    from {
+        image = "eclipse-temurin:21.0.8_9-jre"
+    }
+    to {
+        image = "elilillyco-continuum-docker-lc.jfrog.io/${project.name}:${project.version}"
+        auth {
+            username = System.getenv("MAVEN_REPO_USR")
+            password = System.getenv("MAVEN_REPO_PSW")
+        }
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+            group = project.group
+            description = project.description
+            version = project.version.toString()
+            pom {
+                name.set(project.name)
+                description.set(project.description)
+                url.set("https://github.com/EliLillyCo/SPE_continuum")
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = "continuum"
+            url = uri("https://elilillyco.jfrog.io/elilillyco/continuum-maven-lc")
+            // url = uri("https://elilillyco.jfrog.io/elilillyco/lrl-jarvis-maven-lc")
+            credentials {
+                username = System.getenv("MAVEN_REPO_USR")
+                password = System.getenv("MAVEN_REPO_PSW")
+            }
+        }
+    }
 }
