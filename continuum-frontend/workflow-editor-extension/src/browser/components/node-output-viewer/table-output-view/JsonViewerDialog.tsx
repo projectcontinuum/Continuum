@@ -1,14 +1,11 @@
 import * as React from 'react';
-import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
-import { Box, Button, DialogActions, DialogContent, IconButton, Typography, styled } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, IconButton, styled, Tooltip } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import MaximizeIcon from '@mui/icons-material/Fullscreen';
 import RestoreIcon from '@mui/icons-material/FullscreenExit';
-import { JsonForms } from '@jsonforms/react';
-import { materialCells, materialRenderers } from '@jsonforms/material-renderers';
-import { JsonFormsCore, JsonSchema, UISchemaElement } from '@jsonforms/core';
-import CodeEditorControl, { codeEditorTester } from './CodeEditorRenderer';
+import { MonacoEditorWrapper } from '../../monaco/MonacoEditorWrapper';
+import { useMUIThemeStore } from '../../../store/MUIThemeStore';
 
 interface StyledDialogProps {
     customWidth?: number;
@@ -28,17 +25,19 @@ const StyledDialog = styled(Dialog, {
       maxHeight: 'none',
       position: 'relative',
       overflow: 'visible',
+      display: 'flex',
+      flexDirection: 'column',
     },
     '& .MuiDialogContent-root': {
       padding: theme.spacing(2),
       backgroundColor: theme.palette.background.paper || theme.palette.background.default || '#1e1e1e',
-    },
-    '& .MuiDialogActions-root': {
-      padding: theme.spacing(1),
-      backgroundColor: theme.palette.background.paper || theme.palette.background.default || '#1e1e1e',
+      flex: 1,
+      overflow: 'auto',
+      minHeight: 0,
     },
     '& .MuiDialogTitle-root': {
       backgroundColor: theme.palette.background.paper || theme.palette.background.default || '#1e1e1e',
+      flexShrink: 0,
     },
 }));
 
@@ -63,49 +62,31 @@ const ResizeHandle = styled('div')(({ theme }) => ({
     },
 }));
 
-const MIN_DIALOG_WIDTH = 400;
-const MIN_DIALOG_HEIGHT = 300;
+const MIN_DIALOG_WIDTH = 600;
+const MIN_DIALOG_HEIGHT = 400;
 
-const customRenderers = [
-  { tester: codeEditorTester, renderer: CodeEditorControl },
-  ...materialRenderers,
-];
-
-export interface NodeDialogProps {
+export interface JsonViewerDialogProps {
     open: boolean;
-    // selectedValue: string;
-    onClose: (value: any) => void;
-    onSave: (data: any) => void;
-    initialData?: any;
-    dataSchema?: JsonSchema;
-    uiSchema?: UISchemaElement;
-    readOnly?: boolean;
+    value: any;
+    onClose: () => void;
 }
 
-export default function NodeDialog({ onClose, onSave, readOnly=false, open, initialData, dataSchema, uiSchema }: NodeDialogProps) {
-
-    const [data, setData] = React.useState(initialData);
-    const [hasErrors, setHasErrors] = React.useState(false);
-    const [dialogSize, setDialogSize] = React.useState({ width: 600, height: 600 });
+export function JsonViewerDialog({ open, value, onClose }: JsonViewerDialogProps) {
+    const [dialogSize, setDialogSize] = React.useState({ width: 800, height: 600 });
     const [isResizing, setIsResizing] = React.useState(false);
     const [isMaximized, setIsMaximized] = React.useState(false);
+    const [copySuccess, setCopySuccess] = React.useState(false);
     const resizeStartPos = React.useRef({ x: 0, y: 0, width: 0, height: 0 });
-    const previousSize = React.useRef({ width: 600, height: 600 });
+    const previousSize = React.useRef({ width: 800, height: 600 });
+    const monacoTheme = useMUIThemeStore((state) => state.monacoTheme);
 
-    const handleClose = React.useCallback((args: any) => {
-        console.log("handleClose", args);
-        onClose(data);
-    }, [data]);
-
-    const onSavePressed = React.useCallback((args: any) => {
-        console.log("onSavePressed", args);
-        onSave(data);
-    }, [data]);
-
-    const onDataChange = React.useCallback(({errors, data}: Pick<JsonFormsCore, "data" | "errors">) => {
-        setData(data);
-        errors && setHasErrors(errors.length > 0)
-    }, [data]);
+    const jsonString = React.useMemo(() => {
+        try {
+            return JSON.stringify(value, null, 2);
+        } catch (e) {
+            return String(value);
+        }
+    }, [value]);
 
     const handleMaximize = React.useCallback(() => {
         if (isMaximized) {
@@ -120,6 +101,16 @@ export default function NodeDialog({ onClose, onSave, readOnly=false, open, init
             setIsMaximized(true);
         }
     }, [isMaximized, dialogSize]);
+
+    const handleCopy = React.useCallback(async () => {
+        try {
+            await navigator.clipboard.writeText(jsonString);
+            setCopySuccess(true);
+            setTimeout(() => setCopySuccess(false), 2000);
+        } catch (err) {
+            console.error('Failed to copy:', err);
+        }
+    }, [jsonString]);
 
     const handleResizeStart = React.useCallback((e: React.MouseEvent) => {
         if (isMaximized) return;
@@ -163,10 +154,23 @@ export default function NodeDialog({ onClose, onSave, readOnly=false, open, init
     return (
         <StyledDialog
             open={open}
-            onClose={handleClose}
+            onClose={onClose}
             customWidth={dialogSize.width}
             customHeight={dialogSize.height}>
-            <DialogTitle>Node Settings</DialogTitle>
+            <DialogTitle>JSON Viewer</DialogTitle>
+            <Tooltip title={copySuccess ? "Copied!" : "Copy to clipboard"}>
+                <IconButton
+                    aria-label="copy"
+                    onClick={handleCopy}
+                    sx={{
+                        position: 'absolute',
+                        right: 88,
+                        top: 8,
+                        color: (theme) => copySuccess ? theme.palette.success.main : theme.palette.grey[500],
+                    }}>
+                    <ContentCopyIcon />
+                </IconButton>
+            </Tooltip>
             <IconButton
                 aria-label="maximize"
                 onClick={handleMaximize}
@@ -180,7 +184,7 @@ export default function NodeDialog({ onClose, onSave, readOnly=false, open, init
             </IconButton>
             <IconButton
                 aria-label="close"
-                onClick={handleClose}
+                onClick={onClose}
                 sx={{
                     position: 'absolute',
                     right: 8,
@@ -189,31 +193,34 @@ export default function NodeDialog({ onClose, onSave, readOnly=false, open, init
                 }}>
                 <CloseIcon />
             </IconButton>
-            <DialogContent dividers>
-                <Box sx={{
-                    minWidth: "500px",
-                    minHeight: "500px",
-                    p: 5}}>
-                    <JsonForms
-                        schema={dataSchema}
-                        uischema={uiSchema}
-                        data={data}
-                        renderers={customRenderers}
-                        cells={materialCells}
-                        onChange={onDataChange}/>
-                </Box>
+            <DialogContent sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                minHeight: 0,
+                minWidth: 0,
+                p: 0,
+                flex: 1,
+                overflow: 'hidden'
+            }}>
+                <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+                    <MonacoEditorWrapper
+                        value={jsonString}
+                        language="json"
+                        height="100%"
+                        theme={monacoTheme}
+                        options={{
+                            readOnly: true,
+                            minimap: { enabled: false },
+                            scrollBeyondLastLine: false,
+                            wordWrap: 'on',
+                            automaticLayout: true,
+                            lineNumbers: 'on',
+                            folding: true,
+                            renderWhitespace: 'none',
+                        }}
+                    />
+                </div>
             </DialogContent>
-            <DialogActions>
-                <Button autoFocus onClick={handleClose}>
-                    Cancel
-                </Button>
-                <Button
-                    autoFocus
-                    onClick={onSavePressed}
-                    disabled={hasErrors || readOnly}>
-                    <Typography>Save changes</Typography>
-                </Button>
-            </DialogActions>
             {!isMaximized && <ResizeHandle onMouseDown={handleResizeStart} />}
         </StyledDialog>
     );
