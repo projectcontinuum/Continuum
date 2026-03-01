@@ -1,4 +1,4 @@
-package com.continuum.core.api.server.config
+package com.continuum.core.worker.config
 
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
@@ -27,8 +27,6 @@ import java.net.URI
  * @property minioSecretKey The secret key for MinIO authentication
  * @property bucketName The name of the S3 bucket to initialize
  * @property bucketRegion The AWS region to use for the bucket
- * @author Continuum Team
- * @since 1.0.0
  */
 @Component
 @ConditionalOnProperty(name = ["continuum.core.api-server.storage.type"], havingValue = "minio")
