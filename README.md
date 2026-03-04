@@ -1,5 +1,16 @@
 <p style="text-align: center">
-  <img src="docs/gifs/logo-ani.gif" width="25%">
+  <strong>🚀 Build visual, crash-proof workflows in your browser — open source, cloud-native, and extensible.</strong>
+</p>
+
+<p style="text-align: center">
+  <img src="https://img.shields.io/badge/Kotlin-69.9%25-blue" alt="Kotlin 69.9%">
+  <img src="https://img.shields.io/badge/Eclipse_Theia-IDE-1a237e?logo=eclipse&logoColor=white" alt="Eclipse Theia">
+  <img src="https://img.shields.io/badge/Temporal.io-Durable_Execution-000?logo=temporal&logoColor=white" alt="Temporal.io">
+  <img src="https://img.shields.io/badge/React_Flow-Canvas-ff0072?logo=react&logoColor=white" alt="React Flow">
+</p>
+
+<p style="text-align: center">
+  <img src="docs/gifs/logo-ani.gif" width="25%" alt="Project Continuum Logo">
 </p>
 
 <h1 style="text-align: center">Project Continuum</h1>
@@ -19,6 +30,16 @@
 <p style="text-align: center">
   <em>No desktop. No install. Just resilient workflows, in your browser.</em>
 </p>
+
+---
+
+## 🔥 Why It's Cool
+
+- **Truly cloud-native** — not a desktop app ported to the web. Built from day one for browsers, containers, and distributed infrastructure.
+- **Crash-proof by design** — powered by [Temporal](https://temporal.io), workflows survive process crashes, network failures, and restarts without losing a single step.
+- **Watch it happen live** — every node execution streams back to your browser in real time via Kafka → MQTT. No refresh. No polling.
+- **Data stays fast** — nodes pass Apache Parquet tables, not JSON blobs. Columnar, compressed, query-ready from the start.
+- **Extend without breaking** — add new capabilities by deploying new workers, not by touching existing ones. Zero downtime. Zero coupling.
 
 ---
 
@@ -214,12 +235,14 @@ This is the vision: **a marketplace of workers** — lightweight, independent, c
 - [x] Unsloth AI training node
 - [x] IntelliJ IDEA shared run configurations — zero-config dev setup
 - [ ] 🔁 True `while` / `for` loops with condition builder
-- [ ] 🧪 More RDKit chemistry nodes
+- [ ] 🖥️ Electron standalone — run Continuum as a native desktop app, no browser required
+- [ ] 🧪 More RDKit chemistry nodes — full RDKit integration for molecular workflows
+- [ ] 🔥 PyTorch nodes — training, inference, and model management natively in your flow
 - [ ] 🤖 Full AI training node suite (Unsloth ecosystem)
 - [ ] 🔌 Plugin store — Slack, Stripe, Databases, AI services
 - [ ] 🙋 Human-in-the-loop — interactive workflows with approval gates, manual review steps, and pause/resume
 - [ ] 🐛 Visual debugger with timeline replay
-- [ ] 👥 Multi-tenancy & RBAC
+- [ ] 👥 Auth, multi-tenancy & RBAC — authentication, role-based access control, and approval workflows baked in
 - [ ] 🏗️ Multi-worker ecosystem — bring your own worker with custom nodes, auto-discovered via shared registry, zero downtime for others
 - [ ] 📒 Central node repository — a single registry where all workers publish their available nodes, making them discoverable and composable across the platform
 - [ ] ☸️ Helm chart — production-ready Kubernetes deployment for horizontal scaling
