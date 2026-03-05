@@ -4,6 +4,11 @@ plugins {
     id("com.github.node-gradle.node") version "3.2.1"
 }
 
+// Read version from package.json
+val packageJsonFile = file("package.json")
+val packageJson = groovy.json.JsonSlurper().parseText(packageJsonFile.readText()) as Map<*, *>
+version = packageJson["version"] ?: throw GradleException("Unable to read version from package.json")
+
 node {
     version.set("22.12.0") // Specify the Node.js version
     yarnVersion.set("1.22.22") // Specify the Yarn version
