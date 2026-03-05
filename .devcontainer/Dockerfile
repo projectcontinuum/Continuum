@@ -13,9 +13,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y nodejs pkg-config libsecret-1-dev
 
 # Install puthon3.11
-RUN sudo add-apt-repository ppa:deadsnakes/ppa
-RUN sudo apt-get update
-RUN sudo apt-get install python3.11
+# RUN sudo add-apt-repository ppa:deadsnakes/ppa
+# RUN sudo apt-get update
+# RUN sudo apt-get install python3.11
 
 # Set the default shell to bash
 SHELL ["/bin/bash", "-c"]
