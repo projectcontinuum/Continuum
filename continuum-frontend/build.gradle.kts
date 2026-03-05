@@ -41,7 +41,7 @@ tasks.register("publish") {
 tasks.register<Exec>("jib") {
   description = "Docker build and push to GitHub Container Registry"
   group = "Jib tasks"
-  val dockerRepoName = "ghcr.io/${(System.getenv("GITHUB_REPOSITORY") ?: "roushan65/continuum").lowercase()}"
+  val dockerRepoName = "ghcr.io/${(System.getenv("GITHUB_REPOSITORY") ?: property("repoName").toString()).lowercase()}"
   val imageName = "$dockerRepoName/${project.name.lowercase()}:${project.version}"
   commandLine("bash", "-c",
     "docker build -t $imageName . --progress=plain && " +
