@@ -13,6 +13,12 @@ on:
         type: boolean
         default: false
     secrets:
+      MAVEN_REPO_USERNAME:
+        description: 'Username for publishing to Maven repository'
+        required: true
+      MAVEN_REPO_PASSWORD:
+        description: 'Password for publishing to Maven repository'
+        required: true
       DOCKER_HUB_USERNAME:
         description: 'Docker Hub username for pushing container images'
         required: true

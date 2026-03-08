@@ -5,6 +5,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.6"
     `maven-publish`
     id("com.google.cloud.tools.jib") version "3.4.1"
+    signing
 }
 
 group = "org.projectcontinuum.core"
@@ -93,8 +94,12 @@ publishing {
     }
     repositories {
         maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/$repoName")
+            name = "MavenCentral"
+            url = if (version.toString().endsWith("-SNAPSHOT")) {
+                uri("https://central.sonatype.com/repository/maven-snapshots/")
+            } else {
+                uri("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
+            }
             credentials {
                 username = System.getenv("MAVEN_REPO_USERNAME")
                 password = System.getenv("MAVEN_REPO_PASSWORD")
@@ -115,4 +120,18 @@ jib {
         password = System.getenv("DOCKER_REPO_PASSWORD") ?: ""
       }
     }
+}
+
+signing {
+    // Use in-memory key from env vars (set via ORG_GRADLE_PROJECT_ prefix)
+    val signingKeyId: String = System.getenv("SIGNING_KEY_ID") ?: ""
+    val signingKey: String = System.getenv("SIGNING_KEY") ?: ""
+    val signingPassword: String = System.getenv("SIGNING_PASSWORD") ?: ""
+    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+    sign(publishing.publications["mavenJava"])
+}
+
+// Only require signing for release builds (skip for local dev)
+tasks.withType<Sign>().configureEach {
+    onlyIf { System.getenv("IS_RELEASE_BUILD")?.toBoolean() == true }
 }
