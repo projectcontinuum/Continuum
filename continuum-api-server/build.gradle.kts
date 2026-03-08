@@ -129,6 +129,6 @@ signing {
     isRequired = !signingKey.isNullOrBlank()
     if (isRequired) {
         useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+        sign(publishing.publications["mavenJava"])
     }
-    sign(publishing.publications["mavenJava"])
 }
