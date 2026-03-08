@@ -123,15 +123,12 @@ jib {
 }
 
 signing {
-    // Use in-memory key from env vars (set via ORG_GRADLE_PROJECT_ prefix)
-    val signingKeyId: String = System.getenv("GPG_KEY_ID") ?: ""
-    val signingKey: String = System.getenv("GPG_KEY_BASE64") ?: ""
-    val signingPassword: String = System.getenv("GPG_KEY_PASSWORD") ?: ""
-    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+    val signingKeyId = System.getenv("GPG_KEY_ID")
+    val signingKey = System.getenv("GPG_KEY_BASE64")
+    val signingPassword = System.getenv("GPG_KEY_PASSWORD")
+    isRequired = !signingKey.isNullOrBlank()
+    if (isRequired) {
+        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+    }
     sign(publishing.publications["mavenJava"])
-}
-
-// Only require signing for release builds (skip for local dev)
-tasks.withType<Sign>().configureEach {
-    onlyIf { System.getenv("IS_RELEASE_BUILD")?.toBoolean() == true }
 }
