@@ -39,6 +39,19 @@ spring:
           content-type: application/json
           producer:
             use-native-encoding: true
+        continuum-core-event-FeatureRegistration-output:
+          binder: main-kafka-cluster
+          destination: continuum-core-event-FeatureRegistration
+          content-type: application/*+avro
+          producer:
+            use-native-encoding: true
+      kafka:
+        bindings:
+          continuum-core-event-FeatureRegistration-output:
+            producer:
+              configuration:
+                value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+                schema.registry.url: ${CONTINUUM_KAFKA_MAIN_SCHEMA_REGISTRY}
   temporal:
     namespace: ${TEMPORAL_NAMESPACE:default}
     connection:

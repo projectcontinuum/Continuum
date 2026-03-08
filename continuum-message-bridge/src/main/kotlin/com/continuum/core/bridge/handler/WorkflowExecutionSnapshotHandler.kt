@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.kafka.support.KafkaHeaders
 import org.springframework.messaging.Message
 import org.springframework.stereotype.Component
-import reactor.core.publisher.Flux
 import java.util.function.Consumer
 
 @Component
@@ -23,14 +22,12 @@ class WorkflowExecutionSnapshotHandler(
   }
 
   @Bean("continuum-core-event-WorkflowExecutionSnapshot-input")
-  fun executionSnapshotHandler(
-
-  ): Consumer<Flux<Message<WorkflowUpdateEvent>>> = Consumer {
-    it.map { message -> handle(message) }
-      .onErrorContinue { t, u ->
-        LOGGER.error("Error occurred in reactive consumer stream of manifestHandler.", t)
-        LOGGER.error(t.printStackTrace().toString())
-      }.subscribe()
+  fun executionSnapshotHandler(): Consumer<Message<WorkflowUpdateEvent>> = Consumer { message ->
+    try {
+      handle(message)
+    } catch (e: Exception) {
+      LOGGER.error("Error occurred in WorkflowExecutionSnapshot consumer.", e)
+    }
   }
 
   fun handle(message: Message<WorkflowUpdateEvent>) {
@@ -49,5 +46,4 @@ class WorkflowExecutionSnapshotHandler(
       mqttMessage
     )
   }
-
 }

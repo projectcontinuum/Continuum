@@ -40,6 +40,13 @@ dependencies {
     // Project dependencies
     implementation(project(":continuum-commons"))
 
+    // Database dependencies
+    implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+    runtimeOnly("org.postgresql:postgresql")
+
+    // Avro schemas
+    implementation(project(":continuum-avro-schemas"))
+
     // Jackson dependencies
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
 
