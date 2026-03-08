@@ -39,6 +39,20 @@ spring:
           content-type: application/json
           producer:
             use-native-encoding: true
+        continuum-core-event-FeatureRegistration-output:
+          binder: main-kafka-cluster
+          destination: continuum-core-event-FeatureRegistration
+          content-type: application/json
+          producer:
+            use-native-encoding: true
+      kafka:
+        bindings:
+          continuum-core-event-FeatureRegistration-output:
+            producer:
+              configuration:
+                value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+                schema.registry.url: ${CONTINUUM_KAFKA_MAIN_SCHEMA_REGISTRY:http://localhost:38080}
+                specific.avro.reader: true
   temporal:
     namespace: ${TEMPORAL_NAMESPACE:default}
     connection:
@@ -47,7 +61,7 @@ spring:
       packages: com.continuum.core.worker
 continuum.core:
   worker:
-#    node-task-queue: BASE_WORKER_ACTIVITY_TASK_QUEUE
+    node-task-queue: ${CONTINUUM_NODE_TASK_QUEUE:continuum-node-task-queue}
     cache-storage-path: ${CONTINUUM_CACHE_STORAGE_PATH:./.continuum-cache/workflow-data}
     knime:
       executable-path: ${CONTINUUM_KNIME_EXECUTABLE_PATH:/opt/knime/knime}
@@ -62,11 +76,6 @@ continuum.core:
         endpoint: ${CONTINUUM_MINIO_ENDPOINT:http://localhost:39000}
         access-key: ${CONTINUUM_MINIO_USERNAME:minioadmin}
         secret-key: ${CONTINUUM_MINIO_PASSWORD:minioadmin}
-#com.continuum:
-#  feature:
-#    ai:
-#      unsloth-trainer:
-#        venv-path: ${CONTINUUM_UNSLOTH_TRAINER_VENV_PATH:./unsloth-trainer/.venv}
 logging:
   level:
     root: error

@@ -4,8 +4,10 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.temporal.common.converter.DefaultDataConverter
 import io.temporal.common.converter.GlobalDataConverter
 import io.temporal.common.converter.JacksonJsonPayloadConverter
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.PropertySource
 
 /**
  * Spring Boot auto-configuration class for the Continuum Worker starter.
@@ -34,6 +36,7 @@ import org.springframework.context.annotation.Configuration
  */
 @Configuration
 @ComponentScan
+@PropertySource("classpath:continuum-worker-springboot-starter.yaml", factory = YamlPropertySourceFactory::class)
 class AutoConfigure {
   init {
     // Register Kotlin-aware Jackson mapper for Temporal serialization

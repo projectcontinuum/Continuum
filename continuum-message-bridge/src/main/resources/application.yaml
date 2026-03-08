@@ -2,6 +2,8 @@ spring.application.name: continuum-message-bridge
 spring.kafka.consumer.properties.spring.json.trusted.packages: com.continuum.core.commons.model
 spring:
   cloud:
+    function:
+      definition: continuum-core-event-FeatureRegistration-input;continuum-core-event-WorkflowExecutionSnapshot-input
     stream:
       binders:
         main-kafka-cluster:
