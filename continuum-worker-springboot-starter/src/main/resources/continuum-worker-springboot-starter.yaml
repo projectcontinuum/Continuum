@@ -58,7 +58,7 @@ spring:
     connection:
       target: ${TEMPORAL_SERVER_ADDRESS:localhost:7233}
     workersAutoDiscovery:
-      packages: com.continuum.core.worker
+      packages: org.projectcontinuum.core.worker
 continuum.core:
   worker:
     node-task-queue: ${CONTINUUM_NODE_TASK_QUEUE:continuum-node-task-queue}
@@ -79,8 +79,8 @@ continuum.core:
 logging:
   level:
     root: error
-    com.continuum.core.worker: info
-    com.continuum.core.commons.node: info
-    com.continuum.core: info
-    com.continuum.feature.ai: debug
-    com.continuum.core.worker.activity: debug
+    org.projectcontinuum.core.worker: info
+    org.projectcontinuum.core.commons.node: info
+    org.projectcontinuum.core: info
+    org.projectcontinuum.feature.ai: debug
+    org.projectcontinuum.core.worker.activity: debug

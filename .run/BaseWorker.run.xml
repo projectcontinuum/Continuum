@@ -6,7 +6,7 @@
       <env name="CONTINUUM_NODE_TASK_QUEUE" value="CONTINUUM_FEATURE_BASE" />
     </envs>
     <module name="continuum-feature-base.worker.main" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="com.continuum.feature.base.worker.App" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="org.projectcontinuum.feature.base.worker.App" />
     <option name="VM_PARAMETERS" value="-Dserver.port=8081" />
     <extension name="coverage">
       <pattern>

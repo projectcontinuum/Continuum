@@ -4,11 +4,11 @@
     <selectedOptions>
       <option name="environmentVariables" />
     </selectedOptions>
-    <option name="SPRING_BOOT_MAIN_CLASS" value="com.continuum.core.bridge.App" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="org.projectcontinuum.core.bridge.App" />
     <option name="VM_PARAMETERS" value="-Dserver.port=8082" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="com.continuum.core.bridge.*" />
+        <option name="PATTERN" value="org.projectcontinuum.core.bridge.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

@@ -1,5 +1,5 @@
 spring.application.name: continuum-message-bridge
-spring.kafka.consumer.properties.spring.json.trusted.packages: com.continuum.core.commons.model
+spring.kafka.consumer.properties.spring.json.trusted.packages: org.projectcontinuum.core.commons.model
 spring:
   cloud:
     function:
@@ -43,7 +43,7 @@ spring:
               spring:
                 json:
                   trusted:
-                    packages: "com.continuum.core.commons.model"
+                    packages: "org.projectcontinuum.core.commons.model"
         continuum-core-event-FeatureRegistration-input-in-0:
           binder: main-kafka-cluster
           destination: continuum-core-event-FeatureRegistration

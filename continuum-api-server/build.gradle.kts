@@ -32,7 +32,6 @@ dependencies {
 
     // Project dependencies
     implementation(project(":continuum-commons"))
-    implementation(project(":continuum-avro-schemas"))
 
     // Swagger-UI Dependencies
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")

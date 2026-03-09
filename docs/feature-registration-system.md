@@ -21,7 +21,7 @@ Workers publish their available node models to a Kafka topic at startup using Av
 **File:** `continuum-avro-schemas/src/main/avro/com/continuum/core/event/FeatureRegistrationProtocol.avdl`
 
 ```avdl
-@namespace("com.continuum.core.event")
+@namespace("org.projectcontinuum.core.event")
 protocol FeatureRegistrationProtocol {
 
     record FeatureRegistrationRequest {
@@ -40,9 +40,9 @@ protocol FeatureRegistrationProtocol {
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `nodeId` | `string` | Fully qualified class name (e.g., `com.continuum.feature.analytics.node.CreateTableNodeModel`) |
+| `nodeId` | `string` | Fully qualified class name (e.g., `org.projectcontinuum.feature.analytics.node.CreateTableNodeModel`) |
 | `workerId` | `string` | Unique worker instance ID (`worker-{UUID}`), changes on each restart |
-| `featureId` | `string` | Root package of the feature module (e.g., `com.continuum.feature.analytics`) |
+| `featureId` | `string` | Root package of the feature module (e.g., `org.projectcontinuum.feature.analytics`) |
 | `taskQueue` | `string` | Temporal activity task queue name (default: `ACTIVITY_TASK_QUEUE`) |
 | `nodeManifest` | `string` | Full `NodeData` metadata serialized as JSON string (title, description, icon, ports, schemas) |
 | `documentationMarkdown` | `string` | Node documentation markup text (always present) |
@@ -72,9 +72,9 @@ protocol FeatureRegistrationProtocol {
 Strips the trailing `.node` package segment from the node's fully qualified class name:
 
 ```
-com.continuum.feature.analytics.node.CreateTableNodeModel → com.continuum.feature.analytics
-com.continuum.feature.ai.node.UnslothTrainerNodeModel     → com.continuum.feature.ai
-com.continuum.feature.template.node.ColumnJoinerNodeModel  → com.continuum.feature.template
+org.projectcontinuum.feature.analytics.node.CreateTableNodeModel → org.projectcontinuum.feature.analytics
+org.projectcontinuum.feature.ai.node.UnslothTrainerNodeModel     → org.projectcontinuum.feature.ai
+org.projectcontinuum.feature.template.node.ColumnJoinerNodeModel  → org.projectcontinuum.feature.template
 ```
 
 ### Kafka Binding Configuration
