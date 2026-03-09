@@ -118,12 +118,14 @@ publishing {
             name = "localStaging"
             url = uri(layout.buildDirectory.dir("staging-deploy"))
         }
-        maven {
-            name = "SonatypeSnapshots"
-            url = uri("https://central.sonatype.com/repository/maven-snapshots/")
-            credentials {
-                username = System.getenv("MAVEN_REPO_USERNAME") ?: ""
-                password = System.getenv("MAVEN_REPO_PASSWORD") ?: ""
+        if (version.toString().endsWith("-SNAPSHOT")) {
+            maven {
+                name = "SonatypeSnapshots"
+                url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+                credentials {
+                    username = System.getenv("MAVEN_REPO_USERNAME") ?: ""
+                    password = System.getenv("MAVEN_REPO_PASSWORD") ?: ""
+                }
             }
         }
     }
