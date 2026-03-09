@@ -102,7 +102,7 @@ jobs:
           MAVEN_REPO_PASSWORD: ${{ secrets.MAVEN_REPO_PASSWORD }}
 
       - name: Deploy to Maven Central via JReleaser
-        if: inputs.publish_to_maven
+        if: inputs.publish_to_maven && inputs.release
         run: |
           if [ "${{ inputs.module-name }}" = "all" ]; then
             ./gradlew :continuum-api-server:jreleaserDeploy --no-daemon
