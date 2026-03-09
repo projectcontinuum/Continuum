@@ -1,5 +1,3 @@
-import java.util.Base64
-
 plugins {
     kotlin("jvm") version "2.1.0"
     kotlin("plugin.spring") version "1.9.25"
@@ -7,7 +5,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.6"
     `maven-publish`
     id("com.google.cloud.tools.jib") version "3.4.1"
-    signing
+    id("org.jreleaser") version "1.17.0"
 }
 
 group = "org.projectcontinuum.core"
@@ -116,16 +114,8 @@ publishing {
     }
     repositories {
         maven {
-            name = "MavenCentral"
-            url = if (version.toString().endsWith("-SNAPSHOT")) {
-                uri("https://central.sonatype.com/repository/maven-snapshots/")
-            } else {
-                uri("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
-            }
-            credentials {
-                username = System.getenv("MAVEN_REPO_USERNAME")
-                password = System.getenv("MAVEN_REPO_PASSWORD")
-            }
+            name = "localStaging"
+            url = uri(layout.buildDirectory.dir("staging-deploy"))
         }
     }
 }
@@ -144,13 +134,20 @@ jib {
     }
 }
 
-signing {
-    val signingKeyId = System.getenv("GPG_KEY_ID")
-    val signingKey = System.getenv("GPG_KEY_BASE64")
-    val signingPassword = System.getenv("GPG_KEY_PASSWORD")
-    isRequired = !signingKey.isNullOrBlank()
-    if (isRequired) {
-        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-        sign(publishing.publications["mavenJava"])
+jreleaser {
+    signing {
+        active.set(org.jreleaser.model.Active.ALWAYS)
+        armored.set(true)
+    }
+    deploy {
+        maven {
+            mavenCentral {
+                create("sonatype") {
+                    active.set(org.jreleaser.model.Active.ALWAYS)
+                    url.set("https://central.sonatype.com/api/v1/publisher")
+                    stagingRepository("build/staging-deploy")
+                }
+            }
+        }
     }
 }
