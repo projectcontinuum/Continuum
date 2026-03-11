@@ -1,4 +1,4 @@
-package org.projectcontinuum.core.bridge.entity
+package org.projectcontinuum.core.api.server.entity
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
