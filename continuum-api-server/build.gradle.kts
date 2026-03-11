@@ -46,7 +46,7 @@ dependencies {
     // PostgreSQL Dependencies
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    runtimeOnly("org.postgresql:postgresql")
+    implementation("org.postgresql:postgresql")
 
     // AWS dependencies
     implementation("software.amazon.awssdk:s3")
