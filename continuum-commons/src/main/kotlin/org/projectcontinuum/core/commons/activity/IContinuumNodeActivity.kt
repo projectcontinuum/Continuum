@@ -19,8 +19,8 @@ interface IContinuumNodeActivity {
     ERROR("\$error")
   }
 
-  data class NodeActivityOutput @JsonCreator constructor(
-    @JsonProperty("nodeId") val nodeId: String,
-    @JsonProperty("outputs") val outputs: Map<String, PortData>
+  data class NodeActivityOutput(
+    val nodeId: String,
+    val outputs: Map<String, PortData>
   )
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class NodeProgress @JsonCreator constructor(
-  @JsonProperty("progressPercentage") val progressPercentage: Int = 0,
+  @JsonProperty("progressPercentage") val progressPercentage: Int,
   @JsonProperty("message") val message: String? = null,
   @JsonProperty("stageStatus") val stageStatus: Map<String,StageStatus>? = null,
   @JsonProperty("stageDurationMs") val stageDurationMs: Long? = null,
